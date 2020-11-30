@@ -27,7 +27,5 @@ func firstHandle(w http.ResponseWriter, r *http.Request) {
 		text := r.FormValue("textInput")
 		fmt.Fprintf(w, "form : %s\n", form)
 		fmt.Fprintf(w, "text : %s\n", text)
-	} else {
-		fmt.Fprintf(w, "Sorry")
 	}
 }
