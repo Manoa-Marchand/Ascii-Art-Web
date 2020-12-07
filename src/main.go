@@ -1,0 +1,141 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"html/template"
+	"io/ioutil"
+	"net/http"
+	"os"
+)
+
+func main() {
+	http.HandleFunc("/", index)
+	http.ListenAndServe(":8080", nil)
+}
+
+type asciiRender struct {
+	content string
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	var text, font, Result string
+	switch r.Method {
+	case "GET":
+		http.ServeFile(w, r, "templates")
+	case "POST":
+		font = r.FormValue("form")
+		text = r.FormValue("textInput")
+
+		argRune := []rune(text)
+		for index1 := 0; index1 < len(argRune); index1++ {
+			if argRune[index1] < 32 || argRune[index1] > 126 {
+				http.Error(w, "Error 400\nBad Request!", http.StatusNotFound)
+				return
+			}
+		}
+		print(text, font)
+	}
+	content, err := ioutil.ReadFile("file.txt")
+	if err != nil {
+		error(err.Error())
+	}
+	Result = string([]byte(content))
+
+	tmpl, _ := template.ParseFiles("templates/index.html")
+	tmpl.Execute(w, Result)
+}
+
+//fonction pour print
+func print(Args string, Style string) {
+	Arg := []rune(Args)
+	var nbligne, ligne, charRetour int
+	debutMot := 0
+	retour := false
+	var forms string
+	if Style == "standard" {
+		forms = "standard.txt"
+	} else if Style == "shadow" {
+		forms = "shadow.txt"
+	} else {
+		forms = "thinkertoy.txt"
+	}
+	file, err := os.Open("file.txt")
+	if err == nil {
+		file.Close()
+		os.Remove("file.txt")
+	}
+
+	nbretour := retourLigne(Arg)
+	for retourLigne := 0; retourLigne <= nbretour; retourLigne++ {
+		for lignePrint := 0; lignePrint < 8; lignePrint++ {
+			for lettre := debutMot; lettre < len(Arg); lettre++ {
+				nbligne = 0
+				ligne = getLigne(Arg[lettre])
+				file, erreur := os.Open(forms)
+				if erreur != nil {
+					error(erreur.Error())
+				} else {
+					scanner := bufio.NewScanner(file)
+					if Arg[lettre] == '\\' && Arg[lettre+1] == 'n' {
+						retour = true
+						charRetour = lettre + 2
+						break
+					}
+					for scanner.Scan() {
+						if nbligne == ligne+lignePrint {
+							file, err := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
+							defer file.Close()
+							if err != nil {
+								error(err.Error())
+							}
+							_, err = file.WriteString(scanner.Text()) // écrire dans le fichier
+							if err != nil {
+								error(err.Error())
+							}
+						}
+						nbligne++
+					}
+				}
+			}
+			file, _ := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
+			_, err := file.WriteString("\n")
+			if err != nil {
+				error(err.Error())
+			}
+			file.Close()
+		}
+		if retour {
+			debutMot = charRetour
+		}
+	}
+}
+
+//Fonction récupérer la ligne du symbole
+func getLigne(char rune) int {
+	var ligne int
+	for index := 0; index < 95; index++ {
+		if rune(index+32) == char {
+			ligne = index
+			break
+		}
+	}
+	ligne = ligne*9 + 1
+	return ligne
+}
+
+//Fonction pour recuperer le nombre de retour à la ligne
+func retourLigne(Arg []rune) (nbretour int) {
+	count := 0
+	for index := 0; index < len(Arg); index++ {
+		if Arg[index] == '\\' && Arg[index+1] == 'n' {
+			count++
+		}
+	}
+	return count
+}
+
+//Fonction erreur qui affiche l'erreur
+func error(str string) {
+	fmt.Println("ERREUR: " + str)
+}
