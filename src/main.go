@@ -14,10 +14,6 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-type asciiRender struct {
-	content string
-}
-
 func index(w http.ResponseWriter, r *http.Request) {
 	var text, font, Result string
 	switch r.Method {
@@ -40,7 +36,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		error(err.Error())
 	}
-	Result = string([]byte(content))
+	tabContent := []byte(content)
+	Result = string(tabContent[1:])
 
 	tmpl, _ := template.ParseFiles("templates/index.html")
 	tmpl.Execute(w, Result)
