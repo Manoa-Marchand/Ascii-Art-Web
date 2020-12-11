@@ -11,14 +11,16 @@ import (
 
 func main() {
 	http.HandleFunc("/", index)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8082", nil)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
+	var t *template.Template
+	t = template.Must(template.ParseGlob("templates/index.html"))
 	var text, font, Result string
 	switch r.Method {
 	case "GET":
-		http.ServeFile(w, r, "templates")
+		t.ExecuteTemplate(w, "index", nil)
 	case "POST":
 		font = r.FormValue("form")
 		text = r.FormValue("textInput")
