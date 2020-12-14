@@ -28,13 +28,13 @@
 				border: solid 1px black;
 				border-bottom: none;
 				border-radius: 10px;
-				background-color: aqua;
+				background-color: #74cddc;
 			}
 			form {
 				width: 700px;
 				height: 120px;
 				margin: 0 auto;
-				background-color: aqua;
+				background-color: #74cddc;
 				text-align: center;
 				border: solid 1px black;
 				border-radius: 10px;
@@ -43,7 +43,6 @@
 			input[type="radio"]{
 				margin-bottom: 25px;
 			}
-
 			input[type="text"]{
 				width: 200px;
 				margin-bottom: 10px;
@@ -55,8 +54,8 @@
 				width: 80px;
 				background-color: white
 			}
-			.button:hover{
-				background-color: orange
+			.button:hover, input:hover {
+				background-color: orange;
 			}
 			.buttons{
 				margin: 0 auto;
@@ -68,9 +67,14 @@
 			}
 			#result {
 				font-size: 25px;
+				width: 900px;
+				height: 255px;
 				border: solid 1px black;
 				border-radius: 10px;
 				overflow-x: scroll;
+			}
+			::placeholder {
+  				color: black;
 			}
 		</style>
         <title>Ascii Art Web</title>
@@ -97,7 +101,7 @@
 				<br>
 				<div class="buttons">
 					<input class="button" type="submit" value="Valider" />
-					<a href="../file.txt" download="ascii-art.txt"><input class="button"   type="button" value="Télécharger" /></a>
+					<a href="/src/file.txt" download> <button class="button">Télécharger</button> </a>
 				</div>
 			</form>
 		</div>
