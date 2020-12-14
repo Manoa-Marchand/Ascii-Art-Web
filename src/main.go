@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	port := "8080"
+	port := "8081"
 	fmt.Println("Starting server on 127.0.0.1:" + port + "/")
 	http.HandleFunc("/", index)
 	http.ListenAndServe(":"+port, nil)
@@ -58,11 +58,11 @@ func print(Args string, Style string) {
 	retour := false
 	var forms string
 	if Style == "standard" {
-		forms = "standard.txt"
+		forms = "forms/standard.txt"
 	} else if Style == "shadow" {
-		forms = "shadow.txt"
+		forms = "forms/shadow.txt"
 	} else {
-		forms = "thinkertoy.txt"
+		forms = "forms/thinkertoy.txt"
 	}
 	file, err := os.Open("file.txt")
 	if err == nil {
