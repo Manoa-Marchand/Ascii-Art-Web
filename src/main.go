@@ -13,6 +13,7 @@ func main() {
 	port := "8081"
 	fmt.Println("Starting server on 127.0.0.1:" + port + "/")
 	http.HandleFunc("/", index)
+	http.HandleFunc("/download", downloadAscii)
 	http.ListenAndServe(":"+port, nil)
 }
 
@@ -48,6 +49,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 	Result = string(tabContent[1:])
 	tmpl, _ := template.ParseFiles("templates/index.html")
 	tmpl.Execute(w, Result)
+}
+
+func downloadAscii(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "file.txt")
 }
 
 //fonction pour print
