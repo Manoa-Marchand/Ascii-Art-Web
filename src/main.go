@@ -42,7 +42,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 	content, err := ioutil.ReadFile("file.txt")
 	if err != nil {
-		error(err.Error())
+		http.ServeFile(w, r, "templates/500.html")
 	}
 	tabContent := []byte(content)
 	Result = string(tabContent[1:])
@@ -69,7 +69,6 @@ func print(Args string, Style string) {
 		file.Close()
 		os.Remove("file.txt")
 	}
-
 	nbretour := retourLigne(Arg)
 	for retourLigne := 0; retourLigne <= nbretour; retourLigne++ {
 		for lignePrint := 0; lignePrint < 8; lignePrint++ {
