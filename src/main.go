@@ -10,13 +10,14 @@ import (
 )
 
 func main() {
-	port := "8081"
+	port := "8080" /*Changer le port du serveur ici*/
 	fmt.Println("Starting server on 127.0.0.1:" + port + "/")
 	http.HandleFunc("/", index)
 	http.HandleFunc("/download", downloadAscii)
 	http.ListenAndServe(":"+port, nil)
 }
 
+/*Route Principale*/
 func index(w http.ResponseWriter, r *http.Request) {
 	var t *template.Template
 	t = template.Must(template.ParseGlob("templates/index.html"))
@@ -51,6 +52,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, Result)
 }
 
+/*Route pour télécharger*/
 func downloadAscii(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "file.txt")
 }
