@@ -10,13 +10,19 @@ import (
 )
 
 func main() {
+	port := "8080"
+	fmt.Println("Starting server on 127.0.0.1:" + port + "/")
 	http.HandleFunc("/", index)
-	http.ListenAndServe(":8082", nil)
+	http.ListenAndServe(":"+port, nil)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
 	var t *template.Template
 	t = template.Must(template.ParseGlob("templates/index.html"))
+	if r.URL.Path != "/" {
+		http.ServeFile(w, r, "templates/404.html")
+		return
+	}
 	var text, font, Result string
 	switch r.Method {
 	case "GET":
@@ -28,7 +34,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		argRune := []rune(text)
 		for index1 := 0; index1 < len(argRune); index1++ {
 			if argRune[index1] < 32 || argRune[index1] > 126 {
-				http.Error(w, "Error 400\nBad Request!", http.StatusNotFound)
+				http.ServeFile(w, r, "templates/400.html")
 				return
 			}
 		}
@@ -40,7 +46,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 	tabContent := []byte(content)
 	Result = string(tabContent[1:])
-
 	tmpl, _ := template.ParseFiles("templates/index.html")
 	tmpl.Execute(w, Result)
 }
