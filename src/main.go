@@ -74,11 +74,12 @@ func print(Args string, Style string) {
 	debutMot := 0
 	retour := false
 	var forms string
-	if Style == "standard" {
+	switch Style {
+	case "standard":
 		forms = "forms/standard.txt"
-	} else if Style == "shadow" {
+	case "shadow":
 		forms = "forms/shadow.txt"
-	} else {
+	case "thinkertoy":
 		forms = "forms/thinkertoy.txt"
 	}
 	file, err := os.Open("file.txt")
