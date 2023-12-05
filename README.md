@@ -11,7 +11,7 @@ Marchand Manoa
 ## Installation:
 To download and use this project run this in your terminal:
 ```
-git clone git@git.ytrack.learn.ynov.com:BAUMEUNIER/ascii-art-web.git
+git clone https://github.com/Manoa-Marchand/Ascii-Art-Web.git
 cd ascii-art-web/src
 go run main.go
 ```
